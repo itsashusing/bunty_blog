@@ -1,0 +1,41 @@
+{% extends 'blogapp/base.html' %}
+{% block bodyblock %}
+<div class="jumbotron">
+    {% for post in current_page %}
+    <div class="container p-2" style="border: 1px solid rgb(185, 182, 182); border-radius: 5px;">
+        <a href="#"> {{post.author.first_name | capfirst}} {{post.author.last_name}}</a><small class="text-muted">
+            {{post.date}} </small>
+        <hr>
+        <div class="d-flex bd-highlight">
+            <div class="p-2 flex-grow-1 bd-highlight">
+                <h3>{{post.title | capfirst | truncatewords:10}}</h3>
+                <p>{{post.body | truncatewords:55 }} <a href="/details/{{post.id}}">Read more</a></p>
+            </div>
+            <div class="p-2 bd-highlight"> <img class="ml-4 rounded-circle" src="{{post.author.profile.image.url}}"
+                    alt="No image" width="50" height="50"></div>
+        </div>
+    </div>
+
+    <hr>
+    {% endfor %}
+
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            {% if current_page.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ current_page.previous_page_number }}">Previous</a>
+            </li>
+            {% endif %}
+            <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+            <li class="page-item"><a class="page-link" href="?page=2">2</a></li>
+            <li class="page-item"><a class="page-link" href="?page=3">3</a></li>
+            {% if current_page.has_next %}
+            <li class="page-item"><a class="page-link" href=" ?page={{ current_page.next_page_number }}">Next</a>
+            <li class="page-item"><a class="page-link" href=" ?page={{ current_page.paginator.num_pages }}">Last</a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+
+</div>
+
+{% endblock %}

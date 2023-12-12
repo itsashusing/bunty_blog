@@ -1,0 +1,30 @@
+{% extends 'blogapp/base.html' %}
+{% block bodyblock %}
+<div class="jumbotron">
+    <div class="container p-2" style="border: 1px solid rgb(185, 182, 182); border-radius: 5px;">
+        Author: <a href="">{{post.author.first_name | title}} {{post.author.last_name}}</a><small class="text-muted">
+            {{post.date}} </small>
+        <hr>
+        <div class="d-flex bd-highlight">
+            <div class="p-2 flex-grow-1 bd-highlight">
+                <h3>{{post.title | capfirst }}</h3>
+                {% if user.is_authenticated %}
+                {% if user.id == post.author.id %}
+                <div>
+                    <a class="btn btn-warning btn-sm" href="/editpost/{{post.id}}">Edit</a>
+                    <a class="btn btn-danger btn-sm" href="/delete/{{post.id}}">Delete</a>
+                </div>
+                {% endif %}
+                {% endif %}
+                <hr>
+                <p>{{post.body | capfirst }}</p>
+            </div>
+            <div class="p-2 bd-highlight"> <img class="ml-4 rounded-circle" src="{{post.author.profile.image.url}}"
+                    alt="No image" width="50" height="50"></div>
+
+        </div>
+    </div>
+    <hr>
+</div>
+
+{% endblock %}

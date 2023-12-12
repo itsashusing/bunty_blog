@@ -1,0 +1,18 @@
+{% extends 'blogapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block bodyblock %}
+<div class="container">
+    <div style="width: 400px; margin-left: auto; margin-right: auto;">
+        <h2 style="text-align: center;">Log in to Bunty Blog</h2>
+        <hr>
+        <form method="post">
+            {% csrf_token %}
+            {{form | crispy }}
+            <input class="btn btn-primary form-control" type="submit" value="Log In">
+        </form>
+        <small class="text-muted" ><a href="/reset_password"> Forget password</a> </small>
+    </div>
+
+</div>
+
+{% endblock %}

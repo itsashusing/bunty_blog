@@ -1,0 +1,29 @@
+{% extends 'blogapp/base.html' %}
+{% load crispy_forms_tags %}
+{% block bodyblock %}
+{% if user.is_authenticated %}
+    <div class=" jumbotron">
+        <div style="width: 600px; margin-left: auto; margin-right: auto;">
+            <h2 style="text-align: center;"> Edit Your Post {{user.first_name |title}} </h2>
+            <hr>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <input class="btn btn-primary form-control mb-4" type="submit" value="Edit Post">
+            </form>
+        </div>
+        {% else %}
+        <div class="container">
+            <h2>First Login to access this page.</h2>
+        </div>
+        {% endif %}
+    </div>
+
+
+<script>
+    let name='{{user.id}}'
+    document.getElementById('id_author').value=name
+</script>
+
+
+{% endblock %}
