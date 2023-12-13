@@ -1,30 +1,87 @@
 {% extends 'blogapp/base.html' %}
+{% load crispy_forms_tags %}
 {% block bodyblock %}
 <div class="jumbotron">
-    <div class="container p-2" style="border: 1px solid rgb(185, 182, 182); border-radius: 5px;">
-        Author: <a href="">{{post.author.first_name | title}} {{post.author.last_name}}</a><small class="text-muted">
-            {{post.date}} </small>
-        <hr>
+    {% if user.is_authenticated %}
+    <div class="container p-2" style="border: 1px solid rgb(199, 197, 197); border-radius: 5px;">
         <div class="d-flex bd-highlight">
             <div class="p-2 flex-grow-1 bd-highlight">
-                <h3>{{post.title | capfirst }}</h3>
-                {% if user.is_authenticated %}
-                {% if user.id == post.author.id %}
+                <p>
+                    Author: <a href="">{{post.author.first_name | title}} {{post.author.last_name}}</a>
+                    <small class="text-muted">{{post.date}}</small>
+                </p>
+                <hr>
+                <ol>
+                    <h3>
+                        <li>{{post.title | capfirst }}</li>
+                    </h3>
+                </ol>
+
                 <div>
-                    <a class="btn btn-warning btn-sm" href="/editpost/{{post.id}}">Edit</a>
-                    <a class="btn btn-danger btn-sm" href="/delete/{{post.id}}">Delete</a>
+                    {% if user.id == post.author.id %}
+                    <div class="btn-group" role="group" aria-label="Post Actions">
+                        <a class="btn btn-warning btn-sm" href="/editpost/{{post.id}}">Edit</a>
+                        <a class="btn btn-danger btn-sm ml-2" href="/delete/{{post.id}}">Delete</a>
+                    </div>
+                    {% endif %}
+                    <!-- Like Button Start -->
+                    <form action="/like/{{post.id}}" method="POST" class="d-inline">
+                        {% csrf_token %}
+                        <!-- Unlike/Like logic -->
+                        {% if liked %}
+                        <button name="post_id" value="{{post.id}}" type="submit" class="btn btn-primary btn-sm">
+                            Like - {{post.Total_like}}
+                        </button>
+                        {% else %}
+                        <button name="post_id" value="{{post.id}}" type="submit" class="btn btn-primary btn-sm">
+                            Like - {{post.Total_like}}
+                        </button>
+                        {% endif %}
+                    </form>
                 </div>
-                {% endif %}
-                {% endif %}
                 <hr>
                 <p>{{post.body | capfirst }}</p>
             </div>
-            <div class="p-2 bd-highlight"> <img class="ml-4 rounded-circle" src="{{post.author.profile.image.url}}"
-                    alt="No image" width="50" height="50"></div>
+
+            <div class="ml-auto">
+                <div class="p-2 bd-highlight">
+                    <img class="rounded-circle" src="{{post.author.profile.image.url}}" alt="No image" width="50"
+                        height="50">
+                </div>
+            </div>
+        </div>
+        <hr>
+    </div>
+    <dvi class="container">
+        <div class="d-flex">
+            <div class="mr-auto">
+                <h2>Comments:</h2>
+                <ol>
+                    {% for comment in comments %}
+                    <div class="container" style="max-width: 600px;">
+
+                        <li>
+                            <p>{{comment.comment_text}} </p>
+                        </li>
+                    </div>
+                    <hr>
+                    {% endfor %}
+                </ol>
+            </div>
+            <div class="ml-auto">
+                <form method="post">
+                    {% csrf_token %}
+                    {{form | crispy }}
+                    <input class="btn btn-primary" type="submit" value="Add Comment">
+                </form>
+            </div>
 
         </div>
+    </dvi>
+    {% else %}
+    <div class="container">
+        <h2>Log in to view this page.</h2>
     </div>
-    <hr>
+    {% endif %}
 </div>
-
 {% endblock %}
